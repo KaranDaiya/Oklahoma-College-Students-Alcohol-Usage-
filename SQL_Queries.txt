@@ -1,0 +1,64 @@
+CREATE SCHEMA `brfs` ; -- creating schema brfs
+CREATE TABLE IF NOT EXISTS `brfs`.`brfss` ( -- creating table brfss
+  `Question` VARCHAR(300) NULL,
+  `Response` VARCHAR(45) NULL,
+  `Break_out` VARCHAR(45) NULL,
+  `Break_out category` VARCHAR(45) NULL,
+  `Sample_size` INT NULL,
+  `Data_value` INT NULL,
+  `Zip code` INT NULL,
+  INDEX `Zip code_idx` (`Zip code` ASC) VISIBLE,
+  CONSTRAINT `Zip code`
+    FOREIGN KEY (`Zip code`) -- assigning foreing key to zipcode of demographics
+    REFERENCES `brfs`.`demographics` (`Zip code`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `Zip code`
+    FOREIGN KEY (`Zip code`) -- assigning foreign key to zipcode of demographics_Oklahoma table
+    REFERENCES `brfs`.`demographics_Oklahoma` (`Zip code`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+CREATE TABLE IF NOT EXISTS `brfs`.`demographics` ( -- creating table demographics
+  `Zip code` INT NOT NULL,
+  `City` VARCHAR(45) NULL,
+  `County` VARCHAR(45) NULL,
+  PRIMARY KEY (`Zip code`)) -- assigning primary key to zipcode
+ENGINE = InnoDB
+CREATE TABLE IF NOT EXISTS `brfs`.`demographics_Oklahoma` ( -- creating table femaographics_Oklahoma
+  `Zip code` INT NOT NULL,
+  `City` VARCHAR(45) NULL,
+  `County` VARCHAR(45) NULL,
+  PRIMARY KEY (`Zip code`)) -- assigning primary key to zip code
+ENGINE = InnoDB
+
+
+-- Identifying areas of Oklahoma with highest and lowest number of respondents. 
+-- Highest respondent,
+
+SELECT MAX(Data_value) AS highest_respondant FROM brfss
+INNER JOIN demographics_Oklahoma ON brfss.Zipcode = demographics_Oklahoma.Zipcode
+WHERE Break_outcategory='Age group' AND Break_out= '18-24' ;
+-- Lowest respondent,
+SELECT MIN(Data_value) AS highest_respondant FROM brfss_ok
+INNER JOIN demographics_Oklahoma ON brfss.Zipcode = demographics_Oklahoma.Zipcode
+WHERE Break_outcategory='Age group' AND Break_out= '18-24' ;
+
+-- Identifying areas of Oklahoma with highest and lowest number of respondents by city and county
+-- Highest respondent with a city,
+
+SELECT MAX(Data_value) AS highest_respondant FROM brfss_ok
+INNER JOIN demographics_Oklahoma ON brfss.Zipcode = demographics_Oklahoma.Zipcode
+WHERE Break_outcategory='Age group' AND Break_out= '18-24' AND City = 'CAMERON';
+-- Lowest respondent with city,
+SELECT MIN(Data_value) AS highest_respondant FROM brfss_ok
+INNER JOIN demographics_Oklahoma ON brfss.Zipcode = demographics_Oklahoma.Zipcode
+WHERE Break_outcategory='Age group' AND Break_out= '18-24' AND City = 'CAMERON';
+-- Highest respondent with a county,
+SELECT MAX(Data_value) AS highest_respondant FROM brfss_ok
+INNER JOIN demographics_Oklahoma ON brfss.Zipcode = demographics_Oklahoma.Zipcode
+WHERE Break_outcategory='Age group' AND Break_out= '18-24' AND County = LINCOLN;
+-- Lowest respondent with a county,
+SELECT MIN(Data_value) AS highest_respondant FROM brfss_ok
+INNER JOIN demographics_Oklahoma ON brfss.Zipcode = demographics_Oklahoma.Zipcode
+WHERE Break_outcategory='Age group' AND Break_out= '18-24' AND County = LINCOLN;
